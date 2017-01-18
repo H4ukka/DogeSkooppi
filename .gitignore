@@ -6,6 +6,9 @@ application.windows32
 application.windows64
 application.macosx
 
+# Files not directly relating to the app itself (like .psd for images etc.)
+presentation
+
 # =========================
 # Operating System Files
 # =========================
