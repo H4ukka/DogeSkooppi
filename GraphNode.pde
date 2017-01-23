@@ -21,9 +21,6 @@ class GraphNode {
     if(locked) {
       fill(#00f100);
       stroke(#00f100);
-    }else{
-      fill(#f10000);
-      stroke(#f10000);
     }
     ellipse(x,windowYoffset - y * scalars,5,5);
     noFill();

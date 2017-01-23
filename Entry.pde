@@ -70,6 +70,7 @@ class Entry {
   void setTarget (GraphingPanel t) { target = t; }
   
   void update () {
+    textSize(14);
     this.display();
     if((mouseX >= x && mouseX <= x+140+xl && mouseY >= y && mouseY <= y+20) || act == true) {
       if(mousePressed) {
@@ -92,10 +93,10 @@ class Entry {
   void display () {
     noStroke();
     tw = textWidth(l);
-    fill(100);
+    fill(#0f0e16);
     //rect(x,y,x+tw,20);
     rect(x+tw+15,y,xl,20);
-    fill(10);
+    fill(#a4a5c4);
     text(l,x+5,y+15);
     fill(255);
     text(d,x+tw+20,y+15);

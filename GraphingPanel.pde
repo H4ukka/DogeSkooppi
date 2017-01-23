@@ -22,7 +22,11 @@ class GraphingPanel {
   private float max;
   
   private float divX;
-  private int div_width;
+  private float div_width;
+  
+  private String label = "";
+  
+  private color graphColor;
   
   float values[];
   GraphNode[] nodes;
@@ -31,11 +35,14 @@ class GraphingPanel {
   
   private ArrayList<GraphingPanel> parentPanelList = new ArrayList<GraphingPanel>();
   
-  GraphingPanel(int x, int y, int w, int h, float a, float start_a) {
+  GraphingPanel(int x, int y, int w, int h, float a, float start_a, String l, color c, int r) {
     view_x = x;
     view_y = y;
     view_width = w;
     view_height = h;
+    
+    label = l;
+    graphColor = c;
     
     divs = 4;
     divX = 1;
@@ -43,9 +50,22 @@ class GraphingPanel {
     div_width = view_height / divs;
     
     m = 100;
-    resolution = 20;
+    resolution = r;
     a_multip = a;
     a_start = start_a;
+    
+    UpdateResolution();
+    
+    preCalcValues();
+
+    vertical_scalar = div_width;
+    
+    calcMinMax();
+  }
+  
+  void UpdateResolution () {
+    
+    step_length = (float)view_width / (float)resolution;
     
     values = new float[resolution + 1];
     nodes = new GraphNode[resolution + 1];
@@ -54,14 +74,6 @@ class GraphingPanel {
       nodes[i] = new GraphNode();
       nodes[i].setWindowYoffset(view_y + view_height/2);
     }
-    
-    preCalcValues();
-    
-    step_length = (float)view_width / (float)resolution;
-    
-    vertical_scalar = div_width;
-    
-    calcMinMax();
   }
   
   void calcMinMax () {
@@ -95,6 +107,11 @@ class GraphingPanel {
   void AnchorY (int y) { view_y = y; }
   void CalculateFromParents (boolean b) { calculateFromParents = b; }
   void VerticalScalar (float f) { vertical_scalar = f; }
+  void SetResolution (int r) { 
+    resolution = r; 
+    UpdateResolution();
+    preCalcValues();
+  }
   
   void AddParentPanel (GraphingPanel panel) {
     parentPanelList.add(panel);
@@ -122,15 +139,16 @@ class GraphingPanel {
     
     noFill();
     
-    stroke(#cccccc);
+    stroke(#29283d);
     strokeWeight(1);
     drawGrid();
     
-    stroke(255);
-    strokeWeight(2);
+    strokeWeight(1);
     beginShape();
 
     for(int i = 0; i <= resolution; i++) {
+      stroke(graphColor);
+      fill(graphColor);
       vertex(x, (view_y + view_height/2) - (nodes[i].getY() * vertical_scalar));
       nodes[i].update(x, vertical_scalar); 
       x += step_length;
@@ -138,19 +156,27 @@ class GraphingPanel {
     
     endShape();
     
-    strokeWeight(3);
-    stroke(#888888);
-    rect(view_x, view_y, view_width, view_height);
     strokeWeight(1);
+    stroke(#3a3856);
+    rect(view_x, view_y, view_width, view_height, 3);
+    strokeWeight(1);
+    
+    drawTexts();
+  }
+  
+  void drawTexts() {
+    textSize(14);
+    fill(#a4a5c4);
+    text(label, view_x, view_y - 4);
   }
   
   void drawGrid() {
     // Vertical lines
-    for(int i = div_width; i < view_width - div_width; i+=div_width) {
+    for(float i = div_width; i < view_width - div_width; i+=div_width) {
       line(view_x + i, view_y, view_x + i, view_y + view_height);
     }
     // Horizontal lines
-    for(int i = div_width; i < view_height - div_width; i+=div_width) {
+    for(float i = div_width; i < view_height - div_width; i+=div_width) {
       line(view_x, view_y + i, view_x + view_width, view_y + i);
     }
   }
