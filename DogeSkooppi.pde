@@ -6,18 +6,18 @@ Slider resolutionSlider;
 
 void settings () {
   size(800, 900);
+  
 }
 
 void setup () {
-  
+  frameRate(60);
   //surface.setResizable(true);
   
   window.update();
   
-  GraphingPanel p1 = new GraphingPanel(10, 40, 500, 250, 1, 0, "Jännite", color(29, 214, 234), 50);
-  GraphingPanel p2 = new GraphingPanel(10, 40 + height / 3, 500, 250, 1, 0, "Virta", color(109, 67, 153), 50);
-  GraphingPanel p3 = new GraphingPanel(10, 40 + (height / 3) * 2, 500, 250, 3, 0, "Teho", color(61, 236, 152), 50);
-  
+  GraphingPanel p1 = new GraphingPanel(10, 40, 500, 250, 1, 0, "Jännite", color(29, 214, 234), 50, 1, 100);
+  GraphingPanel p2 = new GraphingPanel(10, 40 + height / 3, 500, 250, 1, 0, "Virta", color(109, 67, 153), 50, 1, 100);
+  GraphingPanel p3 = new GraphingPanel(10, 40 + (height / 3) * 2, 500, 250, 3, 0, "Teho", color(61, 236, 152), 50, 1, 100); 
   
   panels.add(p1);
   panels.add(p2);
@@ -38,7 +38,7 @@ void setup () {
 }
 
 void draw () {
-  window.update();
+  //window.update();
 
   background(#1b1a28);
   

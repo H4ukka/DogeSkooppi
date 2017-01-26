@@ -15,6 +15,8 @@ class GraphingPanel {
   private float m;
   private float x;
   
+  private float amp;
+  
   private float step_length;
   private float vertical_scalar;
   
@@ -35,11 +37,13 @@ class GraphingPanel {
   
   private ArrayList<GraphingPanel> parentPanelList = new ArrayList<GraphingPanel>();
   
-  GraphingPanel(int x, int y, int w, int h, float a, float start_a, String l, color c, int r) {
+  GraphingPanel(int x, int y, int w, int h, float a, float start_a, String l, color c, int r, float amplitude, float scalar) {
     view_x = x;
     view_y = y;
     view_width = w;
     view_height = h;
+    
+    amp = amplitude;
     
     label = l;
     graphColor = c;
@@ -58,9 +62,7 @@ class GraphingPanel {
     
     preCalcValues();
 
-    vertical_scalar = div_width;
-    
-    calcMinMax();
+    vertical_scalar = scalar;
   }
   
   void UpdateResolution () {
@@ -80,11 +82,10 @@ class GraphingPanel {
     min = 0;
     max = 0;
     for(int i = 0; i < resolution; i++) {
-      if(values[i] > max) max = values[i];
-      if(values[i] < min) min = values[i];
+      if(abs(values[i]) > max) max = abs(values[i]);
+      if(abs(values[i]) < min) min = abs(values[i]);
     }
-    
-    //vertical_scalar = (view_height / 2) / max - 1;
+    vertical_scalar = (view_height / 2) / max - 1;
   }
   
   void setStartAngleInRadians(float a) {
@@ -95,10 +96,18 @@ class GraphingPanel {
   void preCalcValues() {
     a = a_start;
     for(int i = 0; i <= resolution; i++) {
-      values[i] = sin(a);
+      values[i] = sin(a) * amp;
       nodes[i].setY(values[i]);
       a += (TWO_PI / resolution) * a_multip;
     }
+  }
+  
+  void calcIntegral () {
+    float total = 0;
+    for(int i = 0; i <= resolution; i++) {
+      total += nodes[i].getY() * ((float)step_length * (float)1 / (float)view_width);
+    }
+    println(total);
   }
   
   void Width (int w) { view_width = w; }
@@ -133,8 +142,12 @@ class GraphingPanel {
   
   void update () {
     
-    if (calculateFromParents) calculateValuesFromParents();
-    
+    if (calculateFromParents) {
+      calculateValuesFromParents();
+      calcIntegral();
+      calcMinMax();
+    }
+ 
     x = view_x;
     
     noFill();
@@ -150,7 +163,16 @@ class GraphingPanel {
       stroke(graphColor);
       fill(graphColor);
       vertex(x, (view_y + view_height/2) - (nodes[i].getY() * vertical_scalar));
-      nodes[i].update(x, vertical_scalar); 
+      nodes[i].update(x, vertical_scalar);
+      if (calculateFromParents) { 
+        rectMode(CORNERS);
+        fill(graphColor, 50);
+        noStroke();
+        rect(x - (step_length / 2), (view_y + view_height/2) - (nodes[i].getY() * vertical_scalar), x + (step_length / 2), view_y + view_height/2);
+        stroke(graphColor);
+        noFill();
+        rectMode(CORNER);
+      }
       x += step_length;
     }
     
