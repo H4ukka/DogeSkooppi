@@ -1,20 +1,15 @@
 ArrayList<GraphingPanel> panels = new ArrayList<GraphingPanel>();
-Window window = new Window();
 
 Entry currentPhaseEntry;
 Slider resolutionSlider;
 
 void settings () {
-  size(800, 900);
-  
+  size(800, 900);  
 }
 
 void setup () {
   frameRate(60);
-  //surface.setResizable(true);
-  
-  window.update();
-  
+
   GraphingPanel p1 = new GraphingPanel(10, 40, 500, 250, 1, 0, "Jännite", color(29, 214, 234), 50, 1, 100);
   GraphingPanel p2 = new GraphingPanel(10, 40 + height / 3, 500, 250, 1, 0, "Virta", color(109, 67, 153), 50, 1, 100);
   GraphingPanel p3 = new GraphingPanel(10, 40 + (height / 3) * 2, 500, 250, 3, 0, "Teho", color(61, 236, 152), 50, 1, 100); 
@@ -38,8 +33,6 @@ void setup () {
 }
 
 void draw () {
-  //window.update();
-
   background(#1b1a28);
   
   for(int i = 0; i < panels.size(); i++) {
@@ -47,6 +40,5 @@ void draw () {
   }
   
   currentPhaseEntry.update();
-  resolutionSlider.update();
-  
+  resolutionSlider.update(); 
 }

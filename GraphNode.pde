@@ -5,11 +5,17 @@ class GraphNode {
   private float windowYoffset = 0;
   private float s = 0;
   
+  private float max_y = 0;
+  private float min_y = 0;
+  
   private boolean locked;
   
   GraphNode(){}
   
   void setY (float v) { y = v; }
+  void setMaxY (float v) { max_y = v; };
+  void setMinY (float v) { min_y = v; };
+  
   float getY() { return y; }
   
   void setWindowYoffset (float v) { windowYoffset = v; }
