@@ -1,10 +1,5 @@
-class Slider {
-  
-  //graphics
-  int xpos;      //slider x position
-  int ypos;      //slider y position
-  int xlength;   //length of the slider (X)
-  int ylength;   //length of the slider (Y)
+class Slider extends View {
+
   color active;  //color when active
   color def;     //default color
   color slider;  //slider's color
@@ -31,10 +26,10 @@ class Slider {
   
   Slider (int X, int Y, int XL, int YL, float maxv, float minv, float startv, boolean A, boolean T, String label) {
     
-    xpos = X;
-    ypos = Y;
-    xlength = XL;
-    ylength = YL;
+    XAnchor(X);
+    YAnchor(Y);
+    Width(XL);
+    Height(YL);
     texts = T;
     animations = A;
     active = #5ABFFF;
@@ -42,9 +37,9 @@ class Slider {
     empty = #101010;
   
     slideval = startv;
-    value = xpos + startv;
-    minval = xpos;
-    maxval = xpos + xlength;
+    value = XAnchor() + startv;
+    minval = XAnchor();
+    maxval = XAnchor() + Width();
     
     maxvalue = maxv;
     minvalue = minv;
@@ -60,13 +55,13 @@ class Slider {
     //graphics
     noStroke();
     fill(empty);
-    rect(xpos, ypos, xlength + 10, ylength);
+    rect(XAnchor(), YAnchor(), Width() + 10, Height());
     
     fill(slider);
-    rect(value, ypos, 10, ylength);
+    rect(value, YAnchor(), 10, Height());
     
     fill(#a4a5c4);
-    text(Label,xpos,ypos - 8);
+    text(Label,XAnchor(),YAnchor() - 8);
    
     //mechanics
     if(over()) {
@@ -97,7 +92,7 @@ class Slider {
   }
   
   boolean over() {
-      if(mouseX > value && mouseX < value+10 && mouseY > ypos-10 && mouseY < ypos+10) {
+      if(mouseX > value && mouseX < value+10 && mouseY > YAnchor()-10 && mouseY < YAnchor()+10) {
         return true;
       }else{
         return false;

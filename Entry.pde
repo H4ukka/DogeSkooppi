@@ -4,10 +4,8 @@
   ©2012
 */
 
-class Entry {
-  int x;
-  int y;
-  int xl;
+class Entry extends View {
+
   int t;
   float lx;
   int sl;
@@ -24,9 +22,9 @@ class Entry {
   private GraphingPanel target;
   
   Entry (int X, int Y, int XL, String L) {
-    x = X;
-    y = Y;
-    xl = XL;
+    XAnchor(X);
+    YAnchor(Y);
+    Width(XL);
     l = L;
     cm = #101010;
     d = "";
@@ -34,9 +32,9 @@ class Entry {
   }
   
   Entry (int X, int Y, int XL, String L, String HT) {
-    x = X;
-    y = Y;
-    xl = XL;
+    XAnchor(X);
+    YAnchor(Y);
+    Width(XL);
     l = L;
     cm = #101010;
     ht = HT;
@@ -45,9 +43,9 @@ class Entry {
   }
   
   Entry (int X, int Y, int XL, String L, String HT, String DD) {
-    x = X;
-    y = Y;
-    xl = XL;
+    XAnchor(X);
+    YAnchor(Y);
+    Width(XL);
     l = L;
     cm = #101010;
     ht = HT;
@@ -57,9 +55,9 @@ class Entry {
   }
   
   Entry (int X, int Y, int XL, String L, int DV) {
-    x = X;
-    y = Y;
-    xl = XL+5;
+    XAnchor(X);
+    YAnchor(Y);
+    Width(XL + 5); //??
     l = L;
     cm = #101010;
     d = str(DV);
@@ -72,7 +70,7 @@ class Entry {
   void update () {
     textSize(14);
     this.display();
-    if((mouseX >= x && mouseX <= x+140+xl && mouseY >= y && mouseY <= y+20) || act == true) {
+    if((mouseX >= XAnchor() && mouseX <= XAnchor()+140+Width() && mouseY >= YAnchor() && mouseY <= YAnchor()+20) || act == true) {
       if(mousePressed) {
         typ = true;
         act = true;
@@ -84,7 +82,7 @@ class Entry {
     if(typ == true){
       this.typing();
     }
-    if((mouseX <= x || mouseX >= x+140+xl || mouseY <= y || mouseY >= y+20) && mousePressed) {
+    if((mouseX <= XAnchor() || mouseX >= XAnchor()+140+Width() || mouseY <= YAnchor() || mouseY >= YAnchor()+20) && mousePressed) {
       act = false;
     }
 
@@ -95,15 +93,15 @@ class Entry {
     tw = textWidth(l);
     fill(#0f0e16);
     //rect(x,y,x+tw,20);
-    rect(x+tw+15,y,xl,20);
+    rect(XAnchor()+tw+15,YAnchor(),Width(),20);
     fill(#a4a5c4);
-    text(l,x+5,y+15);
+    text(l,XAnchor()+5,YAnchor()+15);
     fill(255);
-    text(d,x+tw+20,y+15);
+    text(d,XAnchor()+tw+20,YAnchor()+15);
     if(act == true) {
       this.tline();
     }
-    if(textWidth(d) > xl-15) {
+    if(textWidth(d) > Width()-15) {
       maxchar = true;
     }else{
       maxchar = false; 
@@ -136,7 +134,6 @@ class Entry {
          typed = false;
          this.passive();
          act = false;
-         println("Value 'value' in " + l + " assigned as " + value);
          target.setStartAngleInRadians(radians(float(d)));
       }
     }
@@ -146,7 +143,7 @@ class Entry {
     lx = textWidth(d);
     if(t <= 10){  
       stroke(255);
-      line(x+23+tw+lx,y+4,x+tw+lx+23,y+16);
+      line(XAnchor()+23+tw+lx,YAnchor()+4,XAnchor()+tw+lx+23,YAnchor()+16);
       noStroke();
     }
     if(t == 20) {

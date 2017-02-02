@@ -1,8 +1,4 @@
-class GraphingPanel {
-  private int view_x;
-  private int view_y;
-  private int view_width;
-  private int view_height;
+class GraphingPanel extends View {
   
   private int divs;
   
@@ -26,6 +22,8 @@ class GraphingPanel {
   private float divX;
   private float div_width;
   
+  private float integral;
+  
   private String label = "";
   
   private color graphColor;
@@ -38,10 +36,10 @@ class GraphingPanel {
   private ArrayList<GraphingPanel> parentPanelList = new ArrayList<GraphingPanel>();
   
   GraphingPanel(int x, int y, int w, int h, float a, float start_a, String l, color c, int r, float amplitude, float scalar) {
-    view_x = x;
-    view_y = y;
-    view_width = w;
-    view_height = h;
+    XAnchor(x);
+    YAnchor(y);
+    Width(w);
+    Height(h);
     
     amp = amplitude;
     
@@ -51,7 +49,7 @@ class GraphingPanel {
     divs = 4;
     divX = 1;
     
-    div_width = view_height / divs;
+    div_width = Height() / divs;
     
     m = 100;
     resolution = r;
@@ -67,14 +65,14 @@ class GraphingPanel {
   
   void UpdateResolution () {
     
-    step_length = (float)view_width / (float)resolution;
+    step_length = (float)Width() / (float)resolution;
     
     values = new float[resolution + 1];
     nodes = new GraphNode[resolution + 1];
     
     for(int i = 0; i < nodes.length; i++) {
       nodes[i] = new GraphNode();
-      nodes[i].setWindowYoffset(view_y + view_height/2);
+      nodes[i].setWindowYoffset(YAnchor() + Height()/2);
     }
   }
   
@@ -85,7 +83,7 @@ class GraphingPanel {
       if(abs(values[i]) > max) max = abs(values[i]);
       if(abs(values[i]) < min) min = abs(values[i]);
     }
-    vertical_scalar = (view_height / 2) / max - 1;
+    vertical_scalar = (Height() / 2) / max - 1;
   }
   
   void setStartAngleInRadians(float a) {
@@ -105,15 +103,11 @@ class GraphingPanel {
   void calcIntegral () {
     float total = 0;
     for(int i = 0; i <= resolution; i++) {
-      total += nodes[i].getY() * ((float)step_length * (float)1 / (float)view_width);
+      total += nodes[i].getY() * ((float)step_length * (float)1 / (float)Width());
     }
-    println(total);
+    integral = total;
   }
   
-  void Width (int w) { view_width = w; }
-  void Height (int h) { view_height = h; }
-  void AnchorX (int x) { view_x = x; }
-  void AnchorY (int y) { view_y = y; }
   void CalculateFromParents (boolean b) { calculateFromParents = b; }
   void VerticalScalar (float f) { vertical_scalar = f; }
   void SetResolution (int r) { 
@@ -146,9 +140,11 @@ class GraphingPanel {
       calculateValuesFromParents();
       calcIntegral();
       calcMinMax();
+      
+      text(integral, XAnchor(), YAnchor() + Height() + 20);
     }
  
-    x = view_x;
+    x = XAnchor();
     
     noFill();
     
@@ -162,13 +158,13 @@ class GraphingPanel {
     for(int i = 0; i <= resolution; i++) {
       stroke(graphColor);
       fill(graphColor);
-      vertex(x, (view_y + view_height/2) - (nodes[i].getY() * vertical_scalar));
+      vertex(x, (YAnchor() + Height()/2) - (nodes[i].getY() * vertical_scalar));
       nodes[i].update(x, vertical_scalar);
       if (calculateFromParents) { 
         rectMode(CORNERS);
         fill(graphColor, 50);
         noStroke();
-        rect(x - (step_length / 2), (view_y + view_height/2) - (nodes[i].getY() * vertical_scalar), x + (step_length / 2), view_y + view_height/2);
+        rect(x - (step_length / 2), (YAnchor() + Height()/2) - (nodes[i].getY() * vertical_scalar), x + (step_length / 2), YAnchor() + Height()/2);
         stroke(graphColor);
         noFill();
         rectMode(CORNER);
@@ -180,7 +176,7 @@ class GraphingPanel {
     
     strokeWeight(1);
     stroke(#3a3856);
-    rect(view_x, view_y, view_width, view_height, 3);
+    rect(XAnchor(), YAnchor(), Width(), Height(), 3);
     strokeWeight(1);
     
     drawTexts();
@@ -189,17 +185,17 @@ class GraphingPanel {
   void drawTexts() {
     textSize(14);
     fill(#a4a5c4);
-    text(label, view_x, view_y - 4);
+    text(label, XAnchor(), YAnchor() - 4);
   }
   
   void drawGrid() {
     // Vertical lines
-    for(float i = div_width; i < view_width - div_width; i+=div_width) {
-      line(view_x + i, view_y, view_x + i, view_y + view_height);
+    for(float i = div_width; i < Width() - div_width; i+=div_width) {
+      line(XAnchor() + i, YAnchor(), XAnchor() + i, YAnchor() + Height());
     }
     // Horizontal lines
-    for(float i = div_width; i < view_height - div_width; i+=div_width) {
-      line(view_x, view_y + i, view_x + view_width, view_y + i);
+    for(float i = div_width; i < Height() - div_width; i+=div_width) {
+      line(XAnchor(), YAnchor() + i, XAnchor() + Width(), YAnchor() + i);
     }
   }
 }
